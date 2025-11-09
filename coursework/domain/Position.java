@@ -1,0 +1,75 @@
+import java.util.UUID;
+
+/**
+ * Represents a job position within the organization.
+ */
+public class Position {
+    private final String id;
+    private String name;
+    private double salary;
+    private int workingHoursPerWeek;
+
+    public Position(String name, double salary, int workingHoursPerWeek) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.salary = salary;
+        this.workingHoursPerWeek = workingHoursPerWeek;
+    }
+
+    // Private constructor for deserialization
+    private Position(String id, String name, double salary, int workingHoursPerWeek) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.workingHoursPerWeek = workingHoursPerWeek;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public int getWorkingHoursPerWeek() {
+        return workingHoursPerWeek;
+    }
+
+    public void setWorkingHoursPerWeek(int workingHoursPerWeek) {
+        this.workingHoursPerWeek = workingHoursPerWeek;
+    }
+
+    /**
+     * Calculates the attractiveness of a position based on salary per hour.
+     * @return The ratio of salary to weekly hours.
+     */
+    public double getAttractivenessRatio() {
+        if (workingHoursPerWeek == 0) {
+            return 0;
+        }
+        return salary / workingHoursPerWeek;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{"
+                + "id='" + id + "'" +
+                ", name='" + name + "'" +
+                ", salary=" + salary +
+                ", workingHoursPerWeek=" + workingHoursPerWeek +
+                '}';
+    }
+}
