@@ -1,12 +1,21 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Defines the contract for business logic operations related to Human Resources.
+ * Defines the contract for the business logic service that manages human resources operations.
+ * This interface orchestrates the interactions between the presentation layer and the data access layer.
  */
 public interface IHumanResourcesService {
-    // --- Employee Management ---
+    // Employee Management
     void hireEmployee(Employee employee) throws DuplicateEntityException;
     void updateEmployee(Employee employee);
     void deleteEmployee(String employeeId);
@@ -16,7 +25,7 @@ public interface IHumanResourcesService {
     List<Employee> getAllEmployeesSortedByLastName();
     List<Employee> getAllEmployeesSortedBySalary();
 
-    // --- Department Management ---
+    // Department Management
     void addDepartment(Department department) throws DuplicateEntityException;
     void updateDepartment(Department department);
     void deleteDepartment(String departmentId);
@@ -26,7 +35,7 @@ public interface IHumanResourcesService {
     List<Employee> getEmployeesByDepartmentSortedByPosition(String departmentId);
     List<Employee> getEmployeesByDepartmentSortedByProjectCost(String departmentId);
 
-    // --- Position Management ---
+    // Position Management
     void addPosition(Position position) throws DuplicateEntityException;
     void updatePosition(Position position);
     void deletePosition(String positionId);
@@ -35,7 +44,7 @@ public interface IHumanResourcesService {
     List<Position> getMostAttractivePositions(int count);
     Optional<Employee> getMostProfitableEmployeeForPosition(String positionId);
 
-    // --- Project Management ---
+    // Project Management
     void addProject(Project project) throws DuplicateEntityException;
     void updateProject(Project project);
     void deleteProject(String projectId);
@@ -44,7 +53,7 @@ public interface IHumanResourcesService {
     void assignProjectToEmployee(String employeeId, String projectId);
     void removeProjectFromEmployee(String employeeId, String projectId);
 
-    // --- Search ---
+    // Search
     List<Employee> searchEmployeesByKeyword(String keyword);
     List<Project> searchProjectsByKeyword(String keyword);
     Map<String, List<?>> searchAllByKeyword(String keyword);

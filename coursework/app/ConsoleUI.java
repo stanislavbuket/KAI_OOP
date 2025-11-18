@@ -1,19 +1,35 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Handles all console-based user interaction for the application.
+ * This class is responsible for rendering menus and processing user input.
  */
 public class ConsoleUI {
     private final IHumanResourcesService service;
     private final Scanner scanner;
 
+    /**
+     * Constructs a new ConsoleUI.
+     * @param service The business logic service that the UI will interact with.
+     */
     public ConsoleUI(IHumanResourcesService service) {
         this.service = service;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Starts the main application loop, displaying the main menu and handling user choices.
+     */
     public void run() {
         System.out.println("Welcome to the Human Resources Application!");
         while (true) {
@@ -56,7 +72,6 @@ public class ConsoleUI {
         System.out.print("Enter your choice: ");
     }
 
-    // --- Employee Management ---
     private void employeeManagementMenu() {
         while (true) {
             System.out.println("\n--- Employee Management ---");
@@ -249,7 +264,6 @@ public class ConsoleUI {
         }
     }
 
-    // --- Department Management ---
     private void departmentManagementMenu() {
         while (true) {
             System.out.println("\n--- Department Management ---");
@@ -302,7 +316,6 @@ public class ConsoleUI {
     private void handleDeleteDepartment() {
         Department dept = selectEntity(service.getAllDepartments(), "Department to delete");
         if (dept == null) return;
-        // Check if any employee is in this department
         if (!service.getEmployeesByDepartment(dept.getId()).isEmpty()) {
             System.out.println("Cannot delete department. It has employees assigned to it.");
             return;
@@ -337,7 +350,6 @@ public class ConsoleUI {
         }
     }
 
-    // --- Position Management ---
     private void positionManagementMenu() {
          while (true) {
             System.out.println("\n--- Position Management ---");
@@ -404,7 +416,6 @@ public class ConsoleUI {
     private void handleDeletePosition() {
         Position pos = selectEntity(service.getAllPositions(), "Position to delete");
         if (pos == null) return;
-        // Check if any employee has this position
         String posId = pos.getId();
         if (service.getAllEmployees().stream().anyMatch(e -> e.getPosition().getId().equals(posId))) {
             System.out.println("Cannot delete position. It is assigned to one or more employees.");
@@ -440,7 +451,6 @@ public class ConsoleUI {
         }
     }
 
-    // --- Project Management ---
     private void projectManagementMenu() {
         while (true) {
             System.out.println("\n--- Project Management ---");
@@ -497,7 +507,6 @@ public class ConsoleUI {
     private void handleDeleteProject() {
         Project proj = selectEntity(service.getAllProjects(), "Project to delete");
         if (proj == null) return;
-        // Check if project is assigned to any employee
         String projId = proj.getId();
         if (service.getAllEmployees().stream().anyMatch(e -> e.getProjects().stream().anyMatch(p -> p.getId().equals(projId)))) {
             System.out.println("Cannot delete project. It is assigned to one or more employees. Please unassign it first.");
@@ -507,7 +516,6 @@ public class ConsoleUI {
         System.out.println("Project deleted.");
     }
 
-    // --- Search & Reports ---
     private void searchMenu() {
         while (true) {
             System.out.println("\n--- Search & Reports ---");
@@ -591,7 +599,6 @@ public class ConsoleUI {
         }
     }
 
-    // --- Helper Methods ---
     private <T> T selectEntity(List<T> entities, String entityName) {
         return selectEntity(entities, entityName, false);
     }

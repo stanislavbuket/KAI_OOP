@@ -1,9 +1,17 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Implements the IHumanResourcesService interface, providing business logic
- * for managing employee records.
+ * Implements the IHumanResourcesService interface, providing the core business logic
+ * for managing employee records and other related entities.
  */
 public class HumanResourcesService implements IHumanResourcesService {
     private final IEmployeeRepository employeeRepository;
@@ -13,6 +21,11 @@ public class HumanResourcesService implements IHumanResourcesService {
 
     /**
      * Constructs a new HumanResourcesService with the given repositories.
+     * This uses dependency injection to decouple the service from concrete repository implementations.
+     * @param employeeRepository Repository for employee data.
+     * @param departmentRepository Repository for department data.
+     * @param positionRepository Repository for position data.
+     * @param projectRepository Repository for project data.
      */
     public HumanResourcesService(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository, IPositionRepository positionRepository, IProjectRepository projectRepository) {
         this.employeeRepository = employeeRepository;
@@ -21,7 +34,6 @@ public class HumanResourcesService implements IHumanResourcesService {
         this.projectRepository = projectRepository;
     }
 
-    // --- Employee Management ---
     @Override
     public void hireEmployee(Employee employee) throws DuplicateEntityException {
         employeeRepository.save(employee);
@@ -68,7 +80,6 @@ public class HumanResourcesService implements IHumanResourcesService {
                 .collect(Collectors.toList());
     }
 
-    // --- Department Management ---
     @Override
     public void addDepartment(Department department) throws DuplicateEntityException {
         departmentRepository.save(department);
@@ -113,7 +124,6 @@ public class HumanResourcesService implements IHumanResourcesService {
                 .collect(Collectors.toList());
     }
 
-    // --- Position Management ---
     @Override
     public void addPosition(Position position) throws DuplicateEntityException {
         positionRepository.save(position);
@@ -157,7 +167,6 @@ public class HumanResourcesService implements IHumanResourcesService {
                 }));
     }
 
-    // --- Project Management ---
     @Override
     public void addProject(Project project) throws DuplicateEntityException {
         projectRepository.save(project);
@@ -207,7 +216,6 @@ public class HumanResourcesService implements IHumanResourcesService {
         }
     }
 
-    // --- Search ---
     @Override
     public List<Employee> searchEmployeesByKeyword(String keyword) {
         String lowerKeyword = keyword.toLowerCase();
@@ -263,4 +271,3 @@ public class HumanResourcesService implements IHumanResourcesService {
                 .collect(Collectors.toList());
     }
 }
-

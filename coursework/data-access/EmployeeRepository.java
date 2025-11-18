@@ -1,3 +1,11 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -9,10 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Implements the IEmployeeRepository interface using a JSON file for persistence.
- * Serialization and deserialization are handled by the Gson library.
+ * This class manages the serialization and deserialization of Employee objects.
  */
 public class EmployeeRepository implements IEmployeeRepository {
     private static final String FILE_PATH = "employees.json";
@@ -20,8 +29,7 @@ public class EmployeeRepository implements IEmployeeRepository {
     private final Gson gson;
 
     /**
-     * Constructs a new EmployeeRepository.
-     * Loads existing employee data from the JSON file.
+     * Constructs a new EmployeeRepository and loads existing data from the JSON file.
      */
     public EmployeeRepository() {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
@@ -44,7 +52,6 @@ public class EmployeeRepository implements IEmployeeRepository {
             employees.put(employee.getId(), employee);
             saveToFile();
         }
-        // Optionally, throw an exception if the employee does not exist.
     }
 
     @Override
@@ -69,7 +76,7 @@ public class EmployeeRepository implements IEmployeeRepository {
     public List<Employee> findByDepartmentId(String departmentId) {
         return employees.values().stream()
                 .filter(employee -> employee.getDepartment() != null && employee.getDepartment().getId().equals(departmentId))
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     /**
@@ -79,13 +86,13 @@ public class EmployeeRepository implements IEmployeeRepository {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             gson.toJson(employees, writer);
         } catch (IOException e) {
-            // In a real application, use a proper logging framework
             System.err.println("Error saving employees to file: " + e.getMessage());
         }
     }
 
     /**
      * Deserializes employee data from the JSON file into the in-memory map.
+     * If the file does not exist, it starts with an empty collection.
      */
     private void loadFromFile() {
         File file = new File(FILE_PATH);
@@ -102,9 +109,8 @@ public class EmployeeRepository implements IEmployeeRepository {
             }
         } catch (IOException e) {
             System.err.println("Error loading employees from file: " + e.getMessage());
-        } catch (Exception e) { // Catching broader exceptions from Gson parsing
+        } catch (Exception e) {
             System.err.println("Error parsing employee data file. The file might be corrupt: " + e.getMessage());
         }
     }
 }
-

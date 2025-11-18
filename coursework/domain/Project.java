@@ -1,3 +1,11 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.UUID;
 
 /**
@@ -8,13 +16,20 @@ public class Project {
     private String name;
     private double cost;
 
+    /**
+     * Constructs a new Project with a generated ID.
+     * @param name The name of the project.
+     * @param cost The budget or cost of the project.
+     */
     public Project(String name, double cost) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.cost = cost;
     }
-    
-    // Private constructor for deserialization
+
+    /**
+     * Private constructor for deserialization purposes.
+     */
     private Project(String id, String name, double cost) {
         this.id = id;
         this.name = name;
@@ -44,9 +59,9 @@ public class Project {
     @Override
     public String toString() {
         return "Project{" +
-                "id='" + id + "'" + 
-                ", name='" + name + "'" + 
-                ", cost=" + cost + 
+                "id='" + id + "'" +
+                ", name='" + name + "'" +
+                ", cost=" + cost +
                 '}';
     }
 }

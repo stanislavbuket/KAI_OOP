@@ -1,3 +1,11 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -12,12 +20,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements the IProjectRepository interface using a JSON file for persistence.
+ * This class manages the serialization and deserialization of Project objects.
  */
 public class ProjectRepository implements IProjectRepository {
     private static final String FILE_PATH = "projects.json";
     private final Map<String, Project> projects;
     private final Gson gson;
 
+    /**
+     * Constructs a new ProjectRepository and loads existing data from the JSON file.
+     */
     public ProjectRepository() {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         this.projects = new ConcurrentHashMap<>();
@@ -59,6 +71,9 @@ public class ProjectRepository implements IProjectRepository {
         return new ArrayList<>(projects.values());
     }
 
+    /**
+     * Serializes the current map of projects to the JSON file.
+     */
     private synchronized void saveToFile() {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             gson.toJson(projects, writer);
@@ -67,6 +82,10 @@ public class ProjectRepository implements IProjectRepository {
         }
     }
 
+    /**
+     * Deserializes project data from the JSON file into the in-memory map.
+     * If the file does not exist, it starts with an empty collection.
+     */
     private void loadFromFile() {
         File file = new File(FILE_PATH);
         if (!file.exists()) {

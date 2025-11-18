@@ -1,3 +1,11 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.UUID;
 
 /**
@@ -9,6 +17,12 @@ public class Position {
     private double salary;
     private int workingHoursPerWeek;
 
+    /**
+     * Constructs a new Position with a generated ID.
+     * @param name The name of the position.
+     * @param salary The salary for this position.
+     * @param workingHoursPerWeek The standard number of working hours per week.
+     */
     public Position(String name, double salary, int workingHoursPerWeek) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
@@ -16,7 +30,9 @@ public class Position {
         this.workingHoursPerWeek = workingHoursPerWeek;
     }
 
-    // Private constructor for deserialization
+    /**
+     * Private constructor for deserialization purposes.
+     */
     private Position(String id, String name, double salary, int workingHoursPerWeek) {
         this.id = id;
         this.name = name;
@@ -54,6 +70,7 @@ public class Position {
 
     /**
      * Calculates the attractiveness of a position based on salary per hour.
+     * This ratio is used to find the most attractive positions.
      * @return The ratio of salary to weekly hours.
      */
     public double getAttractivenessRatio() {

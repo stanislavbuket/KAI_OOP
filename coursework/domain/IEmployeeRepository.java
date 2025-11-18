@@ -1,14 +1,23 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Defines the contract for data access operations related to Employee entities.
+ * This interface is part of the domain layer and is implemented in the data-access layer.
  */
 public interface IEmployeeRepository {
     /**
      * Saves a new employee to the repository.
      * @param employee The employee to save.
-     * @throws DuplicateEmployeeException If an employee with the same ID already exists.
+     * @throws DuplicateEntityException If an employee with the same ID already exists.
      */
     void save(Employee employee) throws DuplicateEntityException;
 

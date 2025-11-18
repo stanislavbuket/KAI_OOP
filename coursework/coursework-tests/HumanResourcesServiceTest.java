@@ -115,4 +115,108 @@ class HumanResourcesServiceTest {
         assertEquals(50000, employees.get(0).getPosition().getSalary());
         assertEquals(100000, employees.get(1).getPosition().getSalary());
     }
+
+    @Test
+    void testGetMostAttractivePositions_shouldReturnTopPositionsBySalaryToHourRatio() throws DuplicateEntityException {
+        // Arrange
+        Position internPos = new Position("Intern", 15000, 20); // Ratio: 750
+        mockPositionRepo.save(internPos);
+        mockPositionRepo.save(juniorPos); // Ratio: 1250
+        mockPositionRepo.save(seniorPos); // Ratio: 2500
+
+        // Act
+        List<Position> attractivePositions = service.getMostAttractivePositions(2);
+
+        // Assert
+        assertNotNull(attractivePositions);
+        assertEquals(2, attractivePositions.size());
+        assertEquals("Senior Dev", attractivePositions.get(0).getName()); // Highest ratio
+        assertEquals("Junior Dev", attractivePositions.get(1).getName()); // Second highest
+    }
+
+    @Test
+    void testGetMostProfitableEmployeeForPosition_shouldReturnEmployeeWithBestProjectCostToExperienceRatio() throws DuplicateEntityException {
+        // Arrange
+        Project p1 = new Project("P1", 20000);
+        Project p2 = new Project("P2", 50000);
+        mockProjectRepo.save(p1);
+        mockProjectRepo.save(p2);
+
+        Employee emp1 = new Employee("1", "A", "A", "ACC1", 2, devDept, juniorPos); // Ratio: 10000
+        emp1.getProjects().add(p1);
+        service.hireEmployee(emp1);
+
+        Employee emp2 = new Employee("2", "B", "B", "ACC2", 1, devDept, juniorPos); // Ratio: 50000
+        emp2.getProjects().add(p2);
+        service.hireEmployee(emp2);
+
+        Employee emp3 = new Employee("3", "C", "C", "ACC3", 5, devDept, seniorPos); // Different position
+        service.hireEmployee(emp3);
+
+        // Act
+        var profitableEmployeeOpt = service.getMostProfitableEmployeeForPosition(juniorPos.getId());
+
+        // Assert
+        assertTrue(profitableEmployeeOpt.isPresent());
+        assertEquals("2", profitableEmployeeOpt.get().getId()); // emp2 has the highest ratio
+    }
+
+    @Test
+    void testGetEmployeesByDepartmentSortedByProjectCost_shouldReturnEmployeesSortedByTotalProjectValue() throws DuplicateEntityException {
+        // Arrange
+        Project p1 = new Project("P1", 10000);
+        Project p2 = new Project("P2", 50000);
+        mockProjectRepo.save(p1);
+        mockProjectRepo.save(p2);
+
+        Employee emp1 = createEmployee("1", "Low", "Earner", juniorPos); // Cost: 10000
+        emp1.getProjects().add(p1);
+        service.hireEmployee(emp1);
+
+        Employee emp2 = createEmployee("2", "High", "Earner", juniorPos); // Cost: 50000
+        emp2.getProjects().add(p2);
+        service.hireEmployee(emp2);
+
+        // Act
+        List<Employee> sortedEmployees = service.getEmployeesByDepartmentSortedByProjectCost(devDept.getId());
+
+        // Assert
+        assertEquals(2, sortedEmployees.size());
+        assertEquals("2", sortedEmployees.get(0).getId()); // High Earner first
+        assertEquals("1", sortedEmployees.get(1).getId()); // Low Earner second
+    }
+
+    @Test
+    void testAssignProjectToEmployee_shouldAddProjectToEmployee() throws DuplicateEntityException {
+        // Arrange
+        Employee emp = createEmployee("1", "Test", "User", juniorPos);
+        service.hireEmployee(emp);
+        Project proj = new Project("New Project", 1000);
+        service.addProject(proj);
+
+        // Act
+        service.assignProjectToEmployee(emp.getId(), proj.getId());
+
+        // Assert
+        Employee updatedEmp = service.getEmployeeById(emp.getId()).get();
+        assertEquals(1, updatedEmp.getProjects().size());
+        assertEquals(proj.getId(), updatedEmp.getProjects().get(0).getId());
+    }
+
+    @Test
+    void testSearchAllByKeyword_shouldFindMatchingEntities() throws DuplicateEntityException {
+        // Arrange
+        service.hireEmployee(createEmployee("1", "John", "Doe", juniorPos));
+        service.addDepartment(new Department("Marketing"));
+        service.addProject(new Project("Project Phoenix", 100000));
+
+        // Act
+        var results = service.searchAllByKeyword("Phoenix");
+
+        // Assert
+            assertTrue(results.get("Employees").isEmpty()); // Employee toString() doesn't contain project names
+            assertTrue(results.get("Departments").isEmpty());
+            assertFalse(results.get("Projects").isEmpty());
+            assertEquals(1, results.get("Projects").size());
+            assertEquals("Project Phoenix", ((Project) results.get("Projects").get(0)).getName());    }
 }

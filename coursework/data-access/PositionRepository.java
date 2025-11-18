@@ -1,3 +1,11 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -12,12 +20,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements the IPositionRepository interface using a JSON file for persistence.
+ * This class manages the serialization and deserialization of Position objects.
  */
 public class PositionRepository implements IPositionRepository {
     private static final String FILE_PATH = "positions.json";
     private final Map<String, Position> positions;
     private final Gson gson;
 
+    /**
+     * Constructs a new PositionRepository and loads existing data from the JSON file.
+     */
     public PositionRepository() {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         this.positions = new ConcurrentHashMap<>();
@@ -59,6 +71,9 @@ public class PositionRepository implements IPositionRepository {
         return new ArrayList<>(positions.values());
     }
 
+    /**
+     * Serializes the current map of positions to the JSON file.
+     */
     private synchronized void saveToFile() {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             gson.toJson(positions, writer);
@@ -67,6 +82,10 @@ public class PositionRepository implements IPositionRepository {
         }
     }
 
+    /**
+     * Deserializes position data from the JSON file into the in-memory map.
+     * If the file does not exist, it starts with an empty collection.
+     */
     private void loadFromFile() {
         File file = new File(FILE_PATH);
         if (!file.exists()) {

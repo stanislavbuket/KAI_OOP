@@ -1,21 +1,36 @@
+/**
+ * Done by:
+ * Student Name: Stanislav Buket
+ * Variant: 4
+ * Student Group: 121
+ * Coursework
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents an employee with full details as per the requirements.
+ * Represents an employee entity, containing all personal and professional details.
  */
 public class Employee {
     private final String id;
     private String firstName;
     private String lastName;
     private String salaryAccountNumber;
-    private int workExperienceYears; // Трудовий стаж у роках
+    private int workExperienceYears;
     private Department department;
     private Position position;
     private List<Project> projects;
 
     /**
      * Constructs a new Employee.
+     * @param id A unique identifier for the employee.
+     * @param firstName The employee's first name.
+     * @param lastName The employee's last name.
+     * @param salaryAccountNumber The account number for salary payments.
+     * @param workExperienceYears The number of years of work experience.
+     * @param department The department the employee belongs to.
+     * @param position The employee's job position.
      */
     public Employee(String id, String firstName, String lastName, String salaryAccountNumber, int workExperienceYears, Department department, Position position) {
         this.id = id;
@@ -46,7 +61,7 @@ public class Employee {
 
     /**
      * Calculates the total cost of all projects this employee has participated in.
-     * @return The sum of costs of all projects.
+     * @return The sum of costs of all assigned projects.
      */
     public double getTotalProjectsCost() {
         if (projects == null) {
