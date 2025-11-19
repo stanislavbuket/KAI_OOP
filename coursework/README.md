@@ -14,7 +14,8 @@
 
 - `domain`: Містить сутності (`Employee`, `Department` тощо) та інтерфейси репозиторіїв.
 - `data-access`: Реалізація репозиторіїв, що відповідає за збереження та завантаження даних у JSON-файли.
-- `app`: Містить бізнес-логіку (`HumanResourcesService`) та шар представлення (`ConsoleUI`).
+- `business-logic`: Містить бізнес-логіку (`HumanResourcesService`...).
+- `app`: Містить ядро та представлення (`ConsoleUI`).
 - `coursework-tests`: Модульні тести для перевірки коректності бізнес-логіки.
 
 ## 🚀 Як запустити
@@ -27,10 +28,23 @@
 
     ```bash
     # Для Windows
-    gradlew.bat :coursework:run
+    gradlew.bat :coursework:app:run --console=plain
 
     # Для Linux/macOS
-    ./gradlew :coursework:run
+    ./gradlew :coursework:app:run --console=plain
+    ```
+
+## 🧪 Як запустити тести
+
+1.  Перейдіть у кореневу директорію проєкту `KAI_OOP`.
+2.  Виконайте наступну команду у вашому терміналі:
+
+    ```bash
+    # Для Windows
+    gradlew.bat :coursework:coursework-tests:test --console=plain
+
+    # Для Linux/macOS
+    ./gradlew :coursework:coursework-tests:test --console=plain
     ```
 
 ## Mermaid UML Діаграма класів
