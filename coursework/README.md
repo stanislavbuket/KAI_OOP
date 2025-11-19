@@ -47,59 +47,6 @@
     ./gradlew :coursework:coursework-tests:test --console=plain
     ```
 
-## Mermaid UML Діаграма класів
-
-```mermaid
-classDiagram
-    direction TD
-
-    class ConsoleUI {
-        +run()
-    }
-
-    class HumanResourcesService {
-        +hireEmployee(Employee)
-        +getMostAttractivePositions(int)
-    }
-
-    class EmployeeRepository {
-        +save(Employee)
-        +findById(String)
-    }
-    
-    class IEmployeeRepository {
-        <<Interface>>
-        +save(Employee)
-        +findById(String)
-    }
-
-    class Employee {
-        -String firstName
-        -List<Project> projects
-    }
-
-    class Department {
-        -String name
-    }
-
-    class Position {
-        -String name
-    }
-
-    class Project {
-        -String name
-    }
-    
-    ConsoleUI --> HumanResourcesService : uses
-    HumanResourcesService --> IEmployeeRepository : uses
-    EmployeeRepository ..|> IEmployeeRepository : implements
-    EmployeeRepository --> Employee : manages
-
-    Employee --o Department
-    Employee --o Position
-    Employee --o Project
-```
-
 ## 🥹 Чек-лист вимог до курсової роботи
 
 - [x] Консольний застосунок з командним рядком.
