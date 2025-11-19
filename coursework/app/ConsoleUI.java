@@ -6,33 +6,46 @@
  * Coursework
  */
 
+import java.io.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
- * Handles all console-based user interaction for the application.
- * This class is responsible for rendering menus and processing user input.
+ * Handles all console-based user interaction for the application. This class is responsible for
+ * rendering menus and processing user input.
  */
 public class ConsoleUI {
+    /** The service for interacting with human resources data. */
     private final IHumanResourcesService service;
+    /** The scanner for reading user input from the console. */
     private final Scanner scanner;
 
     /**
-     * Constructs a new ConsoleUI.
-     * @param service The business logic service that the UI will interact with.
-     */
+   * Constructs a new ConsoleUI.
+   *
+   * @param service The business logic service that the UI will interact with.
+   */
     public ConsoleUI(IHumanResourcesService service) {
         this.service = service;
         this.scanner = new Scanner(System.in);
     }
 
     /**
-     * Starts the main application loop, displaying the main menu and handling user choices.
-     */
+   * Clears the console screen to provide a fresh view. this is a simulation and works by printing
+   * multiple new lines.
+   */
+    private void clearScreen() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
+
+    /** Starts the main application loop, displaying the main menu and handling user choices. */
     public void run() {
         System.out.println("Welcome to the Human Resources Application!");
         while (true) {
+            clearScreen();
             printMainMenu();
             int choice = getIntInput();
             switch (choice) {
@@ -61,8 +74,9 @@ public class ConsoleUI {
         }
     }
 
+    /** Prints the main menu of the application to the console. */
     private void printMainMenu() {
-        System.out.println("\n--- Main Menu ---");
+        System.out.println("--- Main Menu ---");
         System.out.println("1. Employee Management");
         System.out.println("2. Department Management");
         System.out.println("3. Position Management");
@@ -72,9 +86,13 @@ public class ConsoleUI {
         System.out.print("Enter your choice: ");
     }
 
+    /**
+   * Displays the employee management menu and handles user input for employee-related actions.
+   */
     private void employeeManagementMenu() {
         while (true) {
-            System.out.println("\n--- Employee Management ---");
+            clearScreen();
+            System.out.println("--- Employee Management ---");
             System.out.println("1. Add New Employee");
             System.out.println("2. View Employee Details");
             System.out.println("3. Update Employee");
@@ -95,9 +113,14 @@ public class ConsoleUI {
                 case 7: return;
                 default: System.out.println("Invalid choice. Please try again.");
             }
+            if (choice >= 1 && choice < 7) {
+                pressEnterToContinue();
+            }
         }
     }
 
+
+    /** Handles the logic for adding a new employee based on user input. */
     private void handleAddEmployee() {
         try {
             System.out.print("Enter Employee ID: ");
@@ -130,6 +153,7 @@ public class ConsoleUI {
         }
     }
 
+    /** Handles the logic for viewing the details of a specific employee. */
     private void handleViewEmployee() {
         System.out.print("Enter Employee ID to view: ");
         String id = scanner.nextLine();
@@ -155,6 +179,7 @@ public class ConsoleUI {
         }
     }
 
+    /** Handles the logic for updating an existing employee's details based on user input. */
     private void handleUpdateEmployee() {
         System.out.print("Enter Employee ID to update: ");
         String id = scanner.nextLine();
@@ -195,6 +220,7 @@ public class ConsoleUI {
         System.out.println("Employee updated successfully!");
     }
 
+    /** Handles the logic for deleting an employee from the system. */
     private void handleDeleteEmployee() {
         System.out.print("Enter Employee ID to delete: ");
         String id = scanner.nextLine();
@@ -206,8 +232,10 @@ public class ConsoleUI {
         }
     }
 
+    /** Displays a menu for listing employees with different sorting options. */
     private void listEmployeesMenu() {
-        System.out.println("\n--- List Employees ---");
+        clearScreen();
+        System.out.println("--- List Employees ---");
         System.out.println("1. List Unsorted");
         System.out.println("2. List Sorted by First Name");
         System.out.println("3. List Sorted by Last Name");
@@ -232,12 +260,14 @@ public class ConsoleUI {
         }
     }
 
+    /** Handles the assignment and removal of projects for a selected employee. */
     private void handleEmployeeProjectManagement() {
         Employee employee = selectEntity(service.getAllEmployees(), "Employee");
         if (employee == null) return;
 
         while (true) {
-            System.out.println("\nManaging projects for: " + employee.getFirstName() + " " + employee.getLastName());
+            clearScreen();
+            System.out.println("Managing projects for: " + employee.getFirstName() + " " + employee.getLastName());
             System.out.println("1. Assign Project");
             System.out.println("2. Remove Project");
             System.out.println("3. Back");
@@ -264,9 +294,15 @@ public class ConsoleUI {
         }
     }
 
+
+    /**
+   * Displays the department management menu and handles user input for department-related
+   * actions.
+   */
     private void departmentManagementMenu() {
         while (true) {
-            System.out.println("\n--- Department Management ---");
+            clearScreen();
+            System.out.println("--- Department Management ---");
             System.out.println("1. Add New Department");
             System.out.println("2. List Departments");
             System.out.println("3. Update Department");
@@ -285,9 +321,13 @@ public class ConsoleUI {
                 case 6: return;
                 default: System.out.println("Invalid choice.");
             }
+            if (choice >= 1 && choice < 6) {
+                pressEnterToContinue();
+            }
         }
     }
 
+    /** Handles the logic for adding a new department. */
     private void handleAddDepartment() {
         try {
             System.out.print("Enter new department name: ");
@@ -301,6 +341,7 @@ public class ConsoleUI {
         }
     }
 
+    /** Handles the logic for updating an existing department's name. */
     private void handleUpdateDepartment() {
         Department dept = selectEntity(service.getAllDepartments(), "Department to update");
         if (dept == null) return;
@@ -313,6 +354,7 @@ public class ConsoleUI {
         }
     }
 
+    /** Handles the logic for deleting a department, with a check for existing employees. */
     private void handleDeleteDepartment() {
         Department dept = selectEntity(service.getAllDepartments(), "Department to delete");
         if (dept == null) return;
@@ -324,11 +366,13 @@ public class ConsoleUI {
         System.out.println("Department deleted.");
     }
 
+    /** Displays employees within a selected department, with sorting options. */
     private void handleViewEmployeesInDepartment() {
         Department dept = selectEntity(service.getAllDepartments(), "Department");
         if (dept == null) return;
 
-        System.out.println("\n--- Employees in " + dept.getName() + " ---");
+        clearScreen();
+        System.out.println("--- Employees in " + dept.getName() + " ---");
         System.out.println("1. List Unsorted");
         System.out.println("2. Sort by Position");
         System.out.println("3. Sort by Total Project Cost");
@@ -350,9 +394,14 @@ public class ConsoleUI {
         }
     }
 
+
+    /**
+   * Displays the position management menu and handles user input for position-related actions.
+   */
     private void positionManagementMenu() {
          while (true) {
-            System.out.println("\n--- Position Management ---");
+            clearScreen();
+            System.out.println("--- Position Management ---");
             System.out.println("1. Add New Position");
             System.out.println("2. List Positions");
             System.out.println("3. Update Position");
@@ -373,9 +422,13 @@ public class ConsoleUI {
                 case 7: return;
                 default: System.out.println("Invalid choice.");
             }
+            if (choice >= 1 && choice < 7) {
+                pressEnterToContinue();
+            }
         }
     }
 
+    /** Handles the logic for adding a new position with salary and working hours. */
     private void handleAddPosition() {
         try {
             System.out.print("Enter new position name: ");
@@ -393,6 +446,7 @@ public class ConsoleUI {
         }
     }
 
+    /** Handles the logic for updating an existing position's details. */
     private void handleUpdatePosition() {
         Position pos = selectEntity(service.getAllPositions(), "Position to update");
         if (pos == null) return;
@@ -413,6 +467,7 @@ public class ConsoleUI {
         System.out.println("Position updated.");
     }
 
+    /** Handles the logic for deleting a position, with a check for assigned employees. */
     private void handleDeletePosition() {
         Position pos = selectEntity(service.getAllPositions(), "Position to delete");
         if (pos == null) return;
@@ -425,6 +480,9 @@ public class ConsoleUI {
         System.out.println("Position deleted.");
     }
 
+    /**
+   * Displays a list of the top 5 most "attractive" positions based on the salary-to-hours ratio.
+   */
     private void handleViewMostAttractivePositions() {
         System.out.println("\n--- Top 5 Most Attractive Positions (Salary/Hour Ratio) ---");
         List<Position> positions = service.getMostAttractivePositions(5);
@@ -435,6 +493,10 @@ public class ConsoleUI {
         }
     }
 
+    /**
+   * Finds and displays the most "profitable" employee for a given position. Profitability is
+   * calculated based on project costs relative to work experience.
+   */
     private void handleFindMostProfitableEmployee() {
         Position pos = selectEntity(service.getAllPositions(), "Position");
         if (pos == null) return;
@@ -451,215 +513,287 @@ public class ConsoleUI {
         }
     }
 
-    private void projectManagementMenu() {
-        while (true) {
-            System.out.println("\n--- Project Management ---");
-            System.out.println("1. Add New Project");
-            System.out.println("2. List Projects");
-            System.out.println("3. Update Project");
-            System.out.println("4. Delete Project");
-            System.out.println("5. Back to Main Menu");
-            System.out.print("Enter your choice: ");
+    /** Displays the project management menu and handles user input for project-related actions. */
+  private void projectManagementMenu() {
+    while (true) {
+      clearScreen();
+      System.out.println("--- Project Management ---");
+      System.out.println("1. Add New Project");
+      System.out.println("2. List Projects");
+      System.out.println("3. Update Project");
+      System.out.println("4. Delete Project");
+      System.out.println("5. Back to Main Menu");
+      System.out.print("Enter your choice: ");
 
-            int choice = getIntInput();
-            switch (choice) {
-                case 1: handleAddProject(); break;
-                case 2: service.getAllProjects().forEach(System.out::println); break;
-                case 3: handleUpdateProject(); break;
-                case 4: handleDeleteProject(); break;
-                case 5: return;
-                default: System.out.println("Invalid choice.");
-            }
-        }
+      int choice = getIntInput();
+      switch (choice) {
+        case 1:
+          handleAddProject();
+          break;
+        case 2:
+          service.getAllProjects().forEach(System.out::println);
+          break;
+        case 3:
+          handleUpdateProject();
+          break;
+        case 4:
+          handleDeleteProject();
+          break;
+        case 5:
+          return;
+        default:
+          System.out.println("Invalid choice.");
+      }
+      if (choice >= 1 && choice < 5) {
+        pressEnterToContinue();
+      }
+    }
+  }
+
+  /** Handles the logic for adding a new project. */
+  private void handleAddProject() {
+    try {
+      System.out.print("Enter new project name: ");
+      String name = scanner.nextLine();
+      System.out.print("Enter project cost: ");
+      double cost = getDoubleInput();
+      if (!name.isEmpty()) {
+        service.addProject(new Project(name, cost));
+        System.out.println("Project added.");
+      }
+    } catch (DuplicateEntityException e) {
+      System.err.println("Error: " + e.getMessage());
+    }
+  }
+
+  /** Handles the logic for updating an existing project's details. */
+  private void handleUpdateProject() {
+    Project proj = selectEntity(service.getAllProjects(), "Project to update");
+    if (proj == null) return;
+
+    System.out.print("Enter new name (or press Enter to keep '" + proj.getName() + "'): ");
+    String name = scanner.nextLine();
+    if (!name.isEmpty()) proj.setName(name);
+
+    System.out.print("Enter new cost (or press Enter to keep '" + proj.getCost() + "'): ");
+    String costStr = scanner.nextLine();
+    if (!costStr.isEmpty()) proj.setCost(Double.parseDouble(costStr));
+
+    service.updateProject(proj);
+    System.out.println("Project updated.");
+  }
+
+  /** Handles the logic for deleting a project. */
+  private void handleDeleteProject() {
+    Project proj = selectEntity(service.getAllProjects(), "Project to delete");
+    if (proj == null) return;
+    String projId = proj.getId();
+    if (service.getAllEmployees().stream()
+        .anyMatch(e -> e.getProjects().stream().anyMatch(p -> p.getId().equals(projId)))) {
+      System.out.println(
+          "Cannot delete project. It is assigned to one or more employees. Please unassign it"
+              + " first.");
+      return;
+    }
+    service.deleteProject(projId);
+    System.out.println("Project deleted.");
+  }
+
+  /** Displays the search and reports menu. */
+  private void searchMenu() {
+    while (true) {
+      clearScreen();
+      System.out.println("--- Search & Reports ---");
+      System.out.println("1. Search Employees by Keyword");
+      System.out.println("2. Search Projects by Keyword");
+      System.out.println("3. Advanced Employee Search");
+      System.out.println("4. Global Search by Keyword");
+      System.out.println("5. Back to Main Menu");
+      System.out.print("Enter your choice: ");
+
+      int choice = getIntInput();
+      switch (choice) {
+        case 1:
+          handleSearchEmployees();
+          break;
+        case 2:
+          handleSearchProjects();
+          break;
+        case 3:
+          handleAdvancedSearch();
+          break;
+        case 4:
+          handleGlobalSearch();
+          break;
+        case 5:
+          return;
+        default:
+          System.out.println("Invalid choice.");
+      }
+      if (choice >= 1 && choice < 5) {
+        pressEnterToContinue();
+      }
+    }
+  }
+
+  /** Handles searching for employees by a keyword. */
+  private void handleSearchEmployees() {
+    System.out.print("Enter keyword to search employees (ID, first/last name): ");
+    String keyword = scanner.nextLine();
+    List<Employee> results = service.searchEmployeesByKeyword(keyword);
+    System.out.println("\n--- Search Results ---");
+    if (results.isEmpty()) {
+      System.out.println("No employees found matching '" + keyword + "'.");
+    } else {
+      results.forEach(System.out::println);
+    }
+  }
+
+  /** Handles searching for projects by a keyword. */
+  private void handleSearchProjects() {
+    System.out.print("Enter keyword to search projects (name): ");
+    String keyword = scanner.nextLine();
+    List<Project> results = service.searchProjectsByKeyword(keyword);
+    System.out.println("\n--- Search Results ---");
+    if (results.isEmpty()) {
+      System.out.println("No projects found matching '" + keyword + "'.");
+    } else {
+      results.forEach(System.out::println);
+    }
+  }
+
+  /** Handles an advanced search for employees with multiple criteria. */
+  private void handleAdvancedSearch() {
+    System.out.print("Enter Last Name (or press Enter to skip): ");
+    String lastName = scanner.nextLine();
+    System.out.print("Enter Salary Account Number (or press Enter to skip): ");
+    String accNumber = scanner.nextLine();
+
+    List<Employee> results =
+        service.searchEmployeesAdvanced(
+            lastName.isEmpty() ? null : lastName, accNumber.isEmpty() ? null : accNumber);
+
+    System.out.println("\n--- Advanced Search Results ---");
+    if (results.isEmpty()) {
+      System.out.println("No employees found with specified criteria.");
+    } else {
+      results.forEach(System.out::println);
+    }
+  }
+
+  /** Handles a global search across all entity types. */
+  private void handleGlobalSearch() {
+    System.out.print("Enter keyword for global search: ");
+    String keyword = scanner.nextLine();
+    Map<String, List<?>> results = service.searchAllByKeyword(keyword);
+    System.out.println("\n--- Global Search Results ---");
+    boolean found = false;
+    for (Map.Entry<String, List<?>> entry : results.entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        found = true;
+        System.out.println("--- Found in " + entry.getKey() + " ---");
+        entry.getValue().forEach(System.out::println);
+      }
+    }
+    if (!found) {
+      System.out.println("No results found matching '" + keyword + "'.");
+    }
+  }
+
+  /**
+   * Prompts the user to select an entity from a list.
+   *
+   * @param entities The list of entities to choose from.
+   * @param entityName The name of the entity type.
+   * @param <T> The type of the entity.
+   * @return The selected entity, or null if the selection is invalid.
+   */
+  private <T> T selectEntity(List<T> entities, String entityName) {
+    return selectEntity(entities, entityName, false);
+  }
+
+  /**
+   * Prompts the user to select an entity from a list, with an option to skip.
+   *
+   * @param entities The list of entities to choose from.
+   * @param entityName The name of the entity type.
+   * @param optional If true, allows the user to skip selection.
+   * @param <T> The type of the entity.
+   * @return The selected entity, or null if skipped or invalid.
+   */
+  private <T> T selectEntity(List<T> entities, String entityName, boolean optional) {
+    if (entities.isEmpty()) {
+      System.out.println("No " + entityName + "s available.");
+      return null;
     }
 
-    private void handleAddProject() {
-        try {
-            System.out.print("Enter new project name: ");
-            String name = scanner.nextLine();
-            System.out.print("Enter project cost: ");
-            double cost = getDoubleInput();
-            if (!name.isEmpty()) {
-                service.addProject(new Project(name, cost));
-                System.out.println("Project added.");
-            }
-        } catch (DuplicateEntityException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+    System.out.println("Select a " + entityName + ":");
+    for (int i = 0; i < entities.size(); i++) {
+      Object entity = entities.get(i);
+      String name;
+      if (entity instanceof Employee) {
+        name = ((Employee) entity).getFirstName() + " " + ((Employee) entity).getLastName();
+      } else if (entity instanceof Department) {
+        name = ((Department) entity).getName();
+      } else if (entity instanceof Position) {
+        name = ((Position) entity).getName();
+      } else if (entity instanceof Project) {
+        name = ((Project) entity).getName();
+      } else {
+        name = entity.toString();
+      }
+      System.out.println((i + 1) + ". " + name);
     }
-
-    private void handleUpdateProject() {
-        Project proj = selectEntity(service.getAllProjects(), "Project to update");
-        if (proj == null) return;
-        
-        System.out.print("Enter new name (or press Enter to keep '" + proj.getName() + "'): ");
-        String name = scanner.nextLine();
-        if (!name.isEmpty()) proj.setName(name);
-
-        System.out.print("Enter new cost (or press Enter to keep '" + proj.getCost() + "'): ");
-        String costStr = scanner.nextLine();
-        if (!costStr.isEmpty()) proj.setCost(Double.parseDouble(costStr));
-
-        service.updateProject(proj);
-        System.out.println("Project updated.");
+    if (optional) {
+      System.out.println("0. Skip / No change");
     }
-
-    private void handleDeleteProject() {
-        Project proj = selectEntity(service.getAllProjects(), "Project to delete");
-        if (proj == null) return;
-        String projId = proj.getId();
-        if (service.getAllEmployees().stream().anyMatch(e -> e.getProjects().stream().anyMatch(p -> p.getId().equals(projId)))) {
-            System.out.println("Cannot delete project. It is assigned to one or more employees. Please unassign it first.");
-            return;
-        }
-        service.deleteProject(projId);
-        System.out.println("Project deleted.");
+    System.out.print("Enter choice: ");
+    int choice = getIntInput();
+    if (optional && choice == 0) {
+      return null;
     }
-
-    private void searchMenu() {
-        while (true) {
-            System.out.println("\n--- Search & Reports ---");
-            System.out.println("1. Search Employees by Keyword");
-            System.out.println("2. Search Projects by Keyword");
-            System.out.println("3. Advanced Employee Search");
-            System.out.println("4. Global Search by Keyword");
-            System.out.println("5. Back to Main Menu");
-            System.out.print("Enter your choice: ");
-
-            int choice = getIntInput();
-            switch (choice) {
-                case 1: handleSearchEmployees(); break;
-                case 2: handleSearchProjects(); break;
-                case 3: handleAdvancedSearch(); break;
-                case 4: handleGlobalSearch(); break;
-                case 5: return;
-                default: System.out.println("Invalid choice.");
-            }
-        }
+    if (choice > 0 && choice <= entities.size()) {
+      return entities.get(choice - 1);
     }
+    System.out.println("Invalid choice.");
+    return null;
+  }
 
-    private void handleSearchEmployees() {
-        System.out.print("Enter keyword to search employees (ID, first/last name): ");
-        String keyword = scanner.nextLine();
-        List<Employee> results = service.searchEmployeesByKeyword(keyword);
-        System.out.println("\n--- Search Results ---");
-        if (results.isEmpty()) {
-            System.out.println("No employees found matching '" + keyword + "'.");
-        } else {
-            results.forEach(System.out::println);
-        }
+  /**
+   * Reads an integer from the console.
+   *
+   * @return The integer read, or -1 if the input is invalid.
+   */
+  private int getIntInput() {
+    try {
+      String line = scanner.nextLine();
+      if (line.trim().isEmpty()) return -1; // treat empty input as invalid
+      return Integer.parseInt(line);
+    } catch (NumberFormatException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      return -1;
     }
+  }
 
-    private void handleSearchProjects() {
-        System.out.print("Enter keyword to search projects (name): ");
-        String keyword = scanner.nextLine();
-        List<Project> results = service.searchProjectsByKeyword(keyword);
-        System.out.println("\n--- Search Results ---");
-        if (results.isEmpty()) {
-            System.out.println("No projects found matching '" + keyword + "'.");
-        } else {
-            results.forEach(System.out::println);
-        }
+  /**
+   * Reads a double from the console.
+   *
+   * @return The double read, or -1.0 if the input is invalid.
+   */
+  private double getDoubleInput() {
+    try {
+      String line = scanner.nextLine();
+      if (line.trim().isEmpty()) return -1.0;
+      return Double.parseDouble(line);
+    } catch (NumberFormatException e) {
+      System.out.println("Invalid input. Please enter a number.");
+      return -1.0;
     }
+  }
 
-    private void handleAdvancedSearch() {
-        System.out.print("Enter Last Name (or press Enter to skip): ");
-        String lastName = scanner.nextLine();
-        System.out.print("Enter Salary Account Number (or press Enter to skip): ");
-        String accNumber = scanner.nextLine();
-
-        List<Employee> results = service.searchEmployeesAdvanced(
-            lastName.isEmpty() ? null : lastName,
-            accNumber.isEmpty() ? null : accNumber
-        );
-
-        System.out.println("\n--- Advanced Search Results ---");
-        if (results.isEmpty()) {
-            System.out.println("No employees found with specified criteria.");
-        } else {
-            results.forEach(System.out::println);
-        }
-    }
-
-    private void handleGlobalSearch() {
-        System.out.print("Enter keyword for global search: ");
-        String keyword = scanner.nextLine();
-        Map<String, List<?>> results = service.searchAllByKeyword(keyword);
-        System.out.println("\n--- Global Search Results ---");
-        boolean found = false;
-        for (Map.Entry<String, List<?>> entry : results.entrySet()) {
-            if (!entry.getValue().isEmpty()) {
-                found = true;
-                System.out.println("--- Found in " + entry.getKey() + " ---");
-                entry.getValue().forEach(System.out::println);
-            }
-        }
-        if (!found) {
-            System.out.println("No results found matching '" + keyword + "'.");
-        }
-    }
-
-    private <T> T selectEntity(List<T> entities, String entityName) {
-        return selectEntity(entities, entityName, false);
-    }
-
-    private <T> T selectEntity(List<T> entities, String entityName, boolean optional) {
-        if (entities.isEmpty()) {
-            System.out.println("No " + entityName + "s available.");
-            return null;
-        }
-
-        System.out.println("Select a " + entityName + ":");
-        for (int i = 0; i < entities.size(); i++) {
-            Object entity = entities.get(i);
-            String name;
-            if (entity instanceof Employee) {
-                name = ((Employee) entity).getFirstName() + " " + ((Employee) entity).getLastName();
-            } else if (entity instanceof Department) {
-                name = ((Department) entity).getName();
-            } else if (entity instanceof Position) {
-                name = ((Position) entity).getName();
-            } else if (entity instanceof Project) {
-                name = ((Project) entity).getName();
-            } else {
-                name = entity.toString();
-            }
-            System.out.println((i + 1) + ". " + name);
-        }
-        if (optional) {
-            System.out.println("0. Skip / No change");
-        }
-        System.out.print("Enter choice: ");
-        int choice = getIntInput();
-        if (optional && choice == 0) {
-            return null;
-        }
-        if (choice > 0 && choice <= entities.size()) {
-            return entities.get(choice - 1);
-        }
-        System.out.println("Invalid choice.");
-        return null;
-    }
-
-    private int getIntInput() {
-        try {
-            String line = scanner.nextLine();
-            if (line.trim().isEmpty()) return -1; // Treat empty input as invalid
-            return Integer.parseInt(line);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
-            return -1;
-        }
-    }
-
-    private double getDoubleInput() {
-        try {
-            String line = scanner.nextLine();
-            if (line.trim().isEmpty()) return -1.0;
-            return Double.parseDouble(line);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
-            return -1.0;
-        }
-    }
+  /** Pauses execution and waits for the user to press Enter. */
+  private void pressEnterToContinue() {
+    System.out.println("\nPress Enter to continue...");
+    scanner.nextLine();
+  }
 }

@@ -6,17 +6,47 @@
  * Coursework
  */
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
- * Defines the contract for data access operations related to Department entities.
- * This interface is part of the domain layer and is implemented in the data-access layer.
+ * Defines the contract for data access operations related to Department entities. This interface is
+ * part of the domain layer and is implemented in the data-access layer.
  */
 public interface IDepartmentRepository {
-    void save(Department department) throws DuplicateEntityException;
-    void update(Department department);
-    void delete(String departmentId);
-    Optional<Department> findById(String departmentId);
-    List<Department> findAll();
+  /**
+   * Saves a new department.
+   *
+   * @param department The department to save.
+   * @throws DuplicateEntityException If a department with the same name already exists.
+   */
+  void save(Department department) throws DuplicateEntityException;
+
+  /**
+   * Updates an existing department.
+   *
+   * @param department The department to update.
+   */
+  void update(Department department);
+
+  /**
+   * Deletes a department by its ID.
+   *
+   * @param departmentId The ID of the department to delete.
+   */
+  void delete(String departmentId);
+
+  /**
+   * Finds a department by its ID.
+   *
+   * @param departmentId The ID of the department to find.
+   * @return An Optional containing the department if found, or an empty Optional otherwise.
+   */
+  Optional<Department> findById(String departmentId);
+
+  /**
+   * Finds all departments.
+   *
+   * @return A list of all departments.
+   */
+  List<Department> findAll();
 }

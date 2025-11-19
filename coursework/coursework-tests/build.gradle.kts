@@ -10,11 +10,10 @@ repositories {
 }
 
 dependencies {
-    // Add dependencies on the other modules
     implementation(project(":domain"))
+    implementation(project(":business-logic"))
     implementation(project(":app"))
 
-    // JUnit 5 dependencies
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.1")
 }
@@ -31,8 +30,6 @@ tasks.test {
     }
 }
 
-// Since we are not using a standard directory structure,
-// we need to tell Gradle where to find the test sources.
 sourceSets {
     named("test") {
         java.setSrcDirs(listOf("."))

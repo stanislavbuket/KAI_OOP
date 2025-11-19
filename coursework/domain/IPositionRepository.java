@@ -6,17 +6,47 @@
  * Coursework
  */
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
- * Defines the contract for data access operations related to Position entities.
- * This interface is part of the domain layer and is implemented in the data-access layer.
+ * Defines the contract for data access operations related to Position entities. This interface is
+ * part of the domain layer and is implemented in the data-access layer.
  */
 public interface IPositionRepository {
-    void save(Position position) throws DuplicateEntityException;
-    void update(Position position);
-    void delete(String positionId);
-    Optional<Position> findById(String positionId);
-    List<Position> findAll();
+  /**
+   * Saves a new position.
+   *
+   * @param position The position to save.
+   * @throws DuplicateEntityException If a position with the same name already exists.
+   */
+  void save(Position position) throws DuplicateEntityException;
+
+  /**
+   * Updates an existing position.
+   *
+   * @param position The position to update.
+   */
+  void update(Position position);
+
+  /**
+   * Deletes a position by its ID.
+   *
+   * @param positionId The ID of the position to delete.
+   */
+  void delete(String positionId);
+
+  /**
+   * Finds a position by its ID.
+   *
+   * @param positionId The ID of the position to find.
+   * @return An Optional containing the position if found, or an empty Optional otherwise.
+   */
+  Optional<Position> findById(String positionId);
+
+  /**
+   * Finds all positions.
+   *
+   * @return A list of all positions.
+   */
+  List<Position> findAll();
 }
