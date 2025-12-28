@@ -1,0 +1,31 @@
+Student {
+  "firstName": "Ivan",
+  "lastName": "Petrenko",
+  "course": 5,
+  "studentId": "KB123",
+  "militaryId": "VO123456",
+}
+Student {
+  "firstName": "Maria",
+  "lastName": "Ivanenko",
+  "course": 4,
+  "studentId": "IT456",
+}
+Student {
+  "firstName": "Petro",
+  "lastName": "Sydorenko",
+  "course": 5,
+  "studentId": "SA789",
+  "militaryId": "VO654321",
+}
+FootballPlayer {
+  "firstName": "Andriy",
+  "lastName": "Shevchenko",
+  "club": "AC Milan",
+  "position": "Forward",
+}
+Lawyer {
+  "firstName": "Valeriy",
+  "lastName": "Zaluzhnyi",
+  "licenseId": "LAW-001",
+}
